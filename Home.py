@@ -176,15 +176,6 @@ if df is not None:
     # Displaying the top negative reviews 
     st.dataframe(top_negative_reviews_df, use_container_width=True)
 
-# Add a placeholder to push content to the top
-st.sidebar.markdown("<div style='height: 50vh;'></div>", unsafe_allow_html=True)
-
-# Add your name at the bottom of the sidebar
-st.sidebar.markdown(
-    "<div style='position: fixed; bottom: 0; text-align: center; width: 100%; font-size: 12px;'>By Peter Ibeabuchi</div>",
-    unsafe_allow_html=True
-)
-
 # ---- HIDE STREAMLIT STYLE ----
 hide_st_style = """
             <style>
