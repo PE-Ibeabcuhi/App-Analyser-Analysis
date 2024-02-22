@@ -22,15 +22,16 @@ st.sidebar.title('App Analyser')
 #-- Reading the data--
 app_link = st.sidebar.text_input("Enter App link here:")
 df = None
+
 if app_link:
     app_store_result = validate_app_store_link(app_link)
     google_play_result = validate_google_play_link(app_link)
-
+    
     if app_store_result:
         try:
             country_code, app_name, app_id = app_store_result
             with st.spinner(f"Fetching Appstore reviews for {app_name} please hold..."):
-                df = get_app_store_reviews(country_code, app_name, app_id)
+                df = get_app_store_reviews(country_code, app_name, app_id,count)
                 name = app_name.title()
                 st.markdown(f"<p style='font-size:35px; text-align:center;'>{name} APP Dashboard</p>", unsafe_allow_html=True)
         except Exception as e:
@@ -45,11 +46,11 @@ if app_link:
                 name = name[1].title()
                 st.markdown(f"<p style='font-size:35px; text-align:center;'>{name} APP Dashboard</p>", unsafe_allow_html=True)
         except Exception as e:
-            # Handle the error and display a custom error message
             st.sidebar.error("Please check the link. An error occurred while fetching Playstore reviews.")
             st.stop()
     else:
         st.sidebar.warning('Invalid link, please check the link')
+
 
     
 

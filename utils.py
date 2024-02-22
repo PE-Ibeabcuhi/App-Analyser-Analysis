@@ -1,4 +1,4 @@
-from google_play_scraper import app, Sort, reviews_all
+from google_play_scraper import app, Sort, reviews
 from app_store_scraper import AppStore
 import pandas as pd
 import numpy as np
@@ -25,16 +25,24 @@ def sentiment_score(review):
 def get_google_play_reviews(app_id):
     try:
         # Get reviews using play_scraper
-        g_reviews = reviews_all(
+        result, continuation_token = reviews(
             app_id,
-            sleep_milliseconds=0,  # defaults to 0
-            lang='en',  # defaults to 'en'
-            country='us',  # defaults to 'us'
-            sort=Sort.NEWEST,  # defaults to Sort.MOST_RELEVANT
+            lang='en', # defaults to 'en'
+            country='us', # defaults to 'us'
+            sort=Sort.NEWEST, # defaults to Sort.NEWEST
+            count= 1000, # defaults to 100
+            filter_score_with=None # defaults to None(means all score)
         )
 
+        # If you pass `continuation_token` as an argument to the reviews function at this point,
+        # it will crawl the items after 3 review items.
+
+        result, _ = reviews(
+            app_id,
+            continuation_token = None # defaults to None(load from the beginning)
+        )
         # Convert the reviews to a DataFrame
-        g_df = pd.DataFrame(np.array(g_reviews), columns=['review'])
+        g_df = pd.DataFrame(np.array(result), columns=['review'])
         g_df2 = g_df.join(pd.DataFrame(g_df.pop('review').tolist()))
 
         # Extract relevant columns and rename them
@@ -56,7 +64,7 @@ def get_google_play_reviews(app_id):
         return df1
     except Exception as e:
         # Catch exceptions and display a custom error message
-        st.error.sidebar("Please check the link. An error occurred while fetching Google Play reviews.")
+        st.error.sidebar("Please check the link. An error occurred while fetching Google Play reviews")
         st.stop()
         
 
@@ -66,7 +74,7 @@ def get_app_store_reviews(countrycode, app_name, app_id):
     try:
         # Get reviews using app_store_scraper
         a_reviews = AppStore(countrycode, app_name, app_id)
-        a_reviews.review()
+        a_reviews.review(how_many=1000)
         
         # Convert the reviews to a DataFrame
         a_df = pd.DataFrame(np.array(a_reviews.reviews), columns=['review'])
