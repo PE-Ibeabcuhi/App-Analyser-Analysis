@@ -31,7 +31,7 @@ if app_link:
         try:
             country_code, app_name, app_id = app_store_result
             with st.spinner(f"Fetching Appstore reviews for {app_name} please hold..."):
-                df = get_app_store_reviews(country_code, app_name, app_id,count)
+                df = get_app_store_reviews(country_code, app_name, app_id)
                 name = app_name.title()
                 st.markdown(f"<p style='font-size:35px; text-align:center;'>{name} APP Dashboard</p>", unsafe_allow_html=True)
         except Exception as e:

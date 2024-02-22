@@ -27,11 +27,11 @@ def get_google_play_reviews(app_id):
         # Get reviews using play_scraper
         result, continuation_token = reviews(
             app_id,
-            lang='en', # defaults to 'en'
-            country='us', # defaults to 'us'
-            sort=Sort.NEWEST, # defaults to Sort.NEWEST
+            lang='en', # sets the language to english
+            country='us', # sets the country to us
+            sort=Sort.NEWEST, # Sort the reviews from the first 1000
             count= 1000, # defaults to 100
-            filter_score_with=None # defaults to None(means all score)
+            filter_score_with=None # Apply no filters
         )
 
         # If you pass `continuation_token` as an argument to the reviews function at this point,
@@ -39,7 +39,7 @@ def get_google_play_reviews(app_id):
 
         result, _ = reviews(
             app_id,
-            continuation_token = None # defaults to None(load from the beginning)
+            continuation_token = None # load the model from the beginning
         )
         # Convert the reviews to a DataFrame
         g_df = pd.DataFrame(np.array(result), columns=['review'])
