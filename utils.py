@@ -30,7 +30,7 @@ def get_google_play_reviews(app_id):
             lang='en', # sets the language to english
             country='us', # sets the country to us
             sort=Sort.NEWEST, # Sort the reviews from the first 1000
-            count= 1000, # defaults to 100
+            count=100, # defaults to 100
             filter_score_with=None # Apply no filters
         )
 
@@ -74,7 +74,7 @@ def get_app_store_reviews(countrycode, app_name, app_id):
     try:
         # Get reviews using app_store_scraper
         a_reviews = AppStore(countrycode, app_name, app_id)
-        a_reviews.review(how_many=1000)
+        a_reviews.review(how_many=100)
         
         # Convert the reviews to a DataFrame
         a_df = pd.DataFrame(np.array(a_reviews.reviews), columns=['review'])
@@ -106,7 +106,7 @@ def get_app_store_reviews(countrycode, app_name, app_id):
 # Validating the link from google play store
 @st.cache_data
 def validate_google_play_link(link):
-    google_play_pattern = r'^https://play\.google\.com/store/apps/details\?id=[a-zA-Z0-9._]+$'
+    google_play_pattern = r'^https://play\.google\.com/store/apps/details\?id=[a-zA-Z0-9._]+'
     
     if not re.match(google_play_pattern, link):
         return False  # Invalid link
@@ -144,16 +144,16 @@ def app_analyzer_description():
     content = """
     # App Analyser: Unveiling the Sentiments behind Your App Choices
 
-    Welcome to App Analyser, a web app designed to analyze your favorite apps in terms of reviews and ratings on both the Google Play Store and Apple App Store. It utilizes the BERT (Bidirectional Encoder Representations from Transformers) model to classify reviews into various sentiment categories.
+    Welcome to App Analyser, a web app designed to analyze your favorite apps in terms of reviews and ratings on both the Google Play Store and Apple App Store. It utilizes huggingface transformer model Bert to classify reviews into various sentiment categories.
 
     ## What Happens Inside
 
     The web app utilizes the [google-play-scraper](https://pypi.org/project/google-play-scraper/) and [Appstore-scraper](https://pypi.org/project/app-store-scraper/) to fetch data from the Google Play Store and Apple App Store. It has been optimized to exclude unnecessary columns, retaining only those essential for sentiment analysis. After retrieving the data, the BERT model is employed to classify reviews on a scale of 1 to 5. Ratings of 1 and 2 represent negative reviews, 3 signifies a neutral review, while 4 and 5 indicate positive reviews.
 
     ### Important Notice: Acknowledging Processing Limitations
-
-    You may encounter a slow loading time during the initial run of the analyzer. This is because the web scrapers fetch reviews in small increments and generate new HTTPS requests after every 200 reviews. Additionally, the BERT model processes each individual review before classification, so more reviews mean longer preprocessing time. We are actively working to optimize this process. In the meantime, it's advisable to analyze specific apps, and if you have patience, you can analyze larger apps as well.
-
+    
+    The webscrapper only analyses the first 100 reviews in the each stores. This reduces the processing time, however, if you seek more review feel free to fork this repo.
+    
     ## Usage
 
     To use the analyzer, locate your favorite app on the Play Store or App Store, and copy the links. A typical App Store link looks like this:
@@ -168,7 +168,7 @@ def app_analyzer_description():
     https://play.google.com/store/apps/details?id=com.artemchep.keyguard
     ```
 
-    For more clarity, watch the video below.
+    For more clarity, see the video on the [GitHub repository](https://github.com/PE-Ibeabcuhi/App-Analyser-Analysis).
 
     If you're curious and want to see how the app works, here are app links for both App Store and Play Store:
 
